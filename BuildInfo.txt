@@ -1,0 +1,5 @@
+Nitrogen Version:
+2.4.0
+
+Built On (uname -v):
+#45~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Mon Jul 15 16:40:02 UTC 2

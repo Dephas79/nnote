@@ -1,0 +1,115 @@
+/***** CSS RESET *****/
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outline:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+/***** STYLE *****/
+
+body { 
+    font-family: "Lucida Grande", "Segoe UI", Tahoma, Helvetica, Arial, sans-serif; 
+    font-size: 16px;
+    line-height: 32px;
+}
+
+#contain {
+    margin-top: 1em;
+    margin-left: 25%;
+    margin-right: 25%;
+    width: 50%;
+}
+
+#top {
+    width: 100%;
+    padding-bottom: .5em;
+    margin-bottom: 1em;
+}
+
+#main_manu {
+    width: 100%;
+    padding-bottom: .5em;
+    margin-bottom: 1em;
+}
+
+.table {
+    display: flex;
+    width: 100%;
+
+}
+
+#sidebar {
+    float: left;
+}
+
+#content {
+    padding-left: 8em;
+    
+}
+
+.container_12 {
+    margin-top: 40px;
+}
+
+h1 {
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    padding-bottom: 7px;
+    border-bottom: dashed 1px #DDD;
+    font-size: 1.875em;
+    margin-top: .3em;
+    margin-bottom: .5em;
+    padding-top: 0;
+    font-style: italic;
+    font-weight: 100;
+}
+
+h2 {
+    margin-top: 0em;
+    margin-bottom: .7em;
+    padding: 0;
+    font-size: 140%;
+    font-weight: lighter;
+    text-decoration: underline;
+}
+
+h3 {
+    font-family: Arial, sans-serif;
+    font-size: 1.25em;
+    line-height: 1.6em;
+    margin-top: 1.333333em;
+    margin-bottom: 1.333333em;
+}
+
+p {
+    font-size: 1em;
+    line-height: 1.5em;
+    margin-bottom: 1em;
+}
+
+a, a:visited {
+    color: #4488FF;
+    text-decoration: none;
+}
+a:hover, a:active {
+    text-decoration: underline;
+}
+
+a.mm:visited {
+    text-decoration: none;
+    color: black;
+}
+a.mmselected {
+    font-size: 140%;
+    text-decoration: underline;
+    color: black;
+}
+
+/* padding around each link and spacer*/
+a.mmselected, a.mm {
+    display: inline-block;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-right: 1px solid black;
+}
+
+a.mmselected:last-child, a.mm:last-child {
+    border-right: none;
+}
+
