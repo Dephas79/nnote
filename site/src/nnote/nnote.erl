@@ -37,6 +37,17 @@ tips()->
                under the MIT LIscence."}
 ].
 
+%% Info
+info(search_by_tag) ->
+    [ #h2{body=["<i>Search Words</i>"]},
+    #p{text=["Search word documentation goes here"]}
+];
+
+info(search_by_date) ->
+    [ #h2{body="<i>Search Date</i>"},
+      #p{text="Search date documentation goes here"}
+].
+
 %%*************************************************************
 %% side menus
 %%*************************************************************
@@ -49,6 +60,20 @@ side_menu("NOTE TYPE") ->
     {"research",    {select,"research"}},
     {"web",          {select,"web"}}
 ].
+
+event(search_by_tag) ->
+    NoteType = wf:q(note_type),
+    Content = content(#{note_type=>NoteType, task=>search_by_tag}),
+    wf:update(content, Content);
+
+event(search_by_date) ->
+    NoteType = wf:q(note_type),
+    Content = content(#{note_type=>NoteType, task=>search_by_date}),
+    wf:update(content, Content);
+
+%% Info Events
+event({info, Function}) ->
+    wf:flash(info(Function));
 
 %%*************************************************************
 %% Sidebar events 
@@ -75,6 +100,7 @@ content(#{note_type:=undefined, task:=undefined}) ->
     #p{text="Select note type."}
     %%search_by_tag()
 ];
+
 content(#{note_type:=NoteType, task:=Task}) ->
      Records = case Task of 
          undefined -> undefined;
@@ -82,6 +108,7 @@ content(#{note_type:=NoteType, task:=Task}) ->
          search_by_date -> date_search(NoteType)
  end,
  display_forms(NoteType, Records);
+
 content(#{}) ->
     [content_headline(),
    #p{text="Select note type."}
@@ -132,10 +159,11 @@ search_by_tag() ->
    #button{text="Info", postback={info, search_by_tag}}
    ].
 search_by_date() ->
-    io:format("Search by date~n"),
-    [].
-
-%%*************************************************************
-%% Sidebar events
-%%*************************************************************
+    [ #br{},
+      #label{text="Enter date"},
+      #br{},
+      n_dates:datepicker(search_date, ""),
+      #button{text="Search", postback=search_by_date},
+      #button{text = "Info", postback = {info, search_by_date}}
+].
 
