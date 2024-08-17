@@ -120,11 +120,13 @@ search_results(Records) ->
    %% io:format("Display results").
 
 add_note_button(NoteType) ->
-    ButtonText = ["Enter new",NoteType,"note"],
+    ButtonText = ["Enter new ",NoteType," note"],
     #button{text=ButtonText, postback={add_note, NoteType}}.
 
 search_by_tag() ->
-   [#label{text="enter search words"},
+   [ #br{},
+   #label{text="enter search words"},
+   #br{},
    #textbox{id=search_words},
    #button{text="Search", postback=search_by_tag},
    #button{text="Info", postback={info, search_by_tag}}

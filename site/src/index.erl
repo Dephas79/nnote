@@ -30,10 +30,12 @@ main_menu() ->
 
 tips()->
     [ #h2{text="Tips & Info"},
-      #p{body="The applications in this framework were developed
+      #p{body="The applications in this framework
+               were developed
                Difus and Derrick for their book
                <em>Build it with Nitrogen</em>.
-               These applications are available for use and modification
+               These applications are available 
+               for use and modification
                under the MIT LIscence."}
 ].
 
