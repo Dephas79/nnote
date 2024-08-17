@@ -1,14 +1,14 @@
 %% -*- mode: nitrogen -*-
--module (index).
+-module (nindex).
 -compile(export_all).
 -include_lib("nitrogen_core/include/wf.hrl").
 -behaviour(n_apps).
 %%*************************************************************
 %% Macros [template and title]
 %%*************************************************************
--define(MMSELECTED, "home").
--define(TITLE, "Welcome!").
--define(TOP, "Build it with Nitrogen").
+-define(MMSELECTED, "nindex").
+-define(TITLE, "Welcome to nindex!").
+-define(TOP, "nindex").
 
 url_vars() -> [id, note_type, task].
 

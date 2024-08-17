@@ -32,17 +32,18 @@ body {
 .table {
     display: flex;
     width: 100%;
-    margin-left: 3em;
+    margin-left: 6em;
 
 }
 
 #sidebar {
     float: left;
+    padding-right: 6em;
 }
 
 #content {
-    padding-left: 7em;
-    
+    padding-left: 3em;
+    color: #4488FF;
 }
 
 .container_12 {
@@ -87,8 +88,8 @@ p {
 }
 
 a, a:visited {
-    margin-right: -3em;
-    margin-left: 3em;
+    margin-right: -6em;
+    margin-left: 6em;
     color: #4488FF;
     text-decoration: none;
 }
