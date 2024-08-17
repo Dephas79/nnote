@@ -55,7 +55,7 @@ content(#{}) ->
 greeting() ->
     [#h2{text=["Welcome to ", n_utils:get_nickname(), "'s",
                 " Nitrogen Application!"]},
-     #p{body="Our moto: <em>\"Build it Fast with Nitrogen\"/em"}
+     #p{body="Our moto: <em>\"Build it Fast with Nitrogen\"/em}
     ].
 
 %%*************************************************************
