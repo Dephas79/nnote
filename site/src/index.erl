@@ -32,7 +32,7 @@ main_menu() ->
 tips()->
     [ #h2{text="Tips & Info"},
       #p{body="The applications in this framework were developed
-               Difus abd Derrick for their book
+               Difus and Derrick for their book
                <em>Build it with Nitrogen</em>.
                These applications are available for use and modification
                under the MIT LIscence."}
@@ -47,15 +47,18 @@ sidebar() ->
 
 content() ->
     Vars = get_page_vars(),
-    #panel {id=content, body=content(Vars)}.
-
+    [
+    #flash{},
+    #panel {id=content, body=content(Vars)}
+].
+    
 content(#{}) ->
     greeting().
 
 greeting() ->
     [#h2{text=["Welcome to ", n_utils:get_nickname(), "'s",
                 " Nitrogen Application!"]},
-     #p{body="Our moto: <em>\"Build it Fast with Nitrogen\"/em}
+     #p{body="Our moto: <em>\"Build it Fast with Nitrogen\"</em>"}
     ].
 
 %%*************************************************************

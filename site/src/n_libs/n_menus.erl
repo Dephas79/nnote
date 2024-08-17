@@ -38,7 +38,10 @@ if_selected(Text, Selected) ->
 %% Main menu events
 %%***************************************************************
 event(tips) ->
-    ok;
+    Mod = wf:page_module(),
+    Tips = Mod:tips(),
+    wf:flash(Tips);
+
 event(logout) ->
     wf:logout(),
     wf:redirect("/");
