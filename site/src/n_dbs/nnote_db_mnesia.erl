@@ -60,8 +60,8 @@ delete(Key) ->
     {atomic, Results} = mnesia:transaction(Insert),
     Results.
 
-populate_record([Id, User_id, Type, Date, Event, Source, Topic, Question, Tags, Note]) ->
-    #nnote{ id = Id,
+populate_record([User_id, Type, Date, Event, Source, Topic, Question, Tags, Note]) ->
+    #nnote{ 
     user_id = User_id,
     type = Type,
     date = Date,

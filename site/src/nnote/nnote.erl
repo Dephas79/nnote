@@ -71,6 +71,11 @@ event(search_by_date) ->
     Content = content(#{note_type=>NoteType, task=>search_by_date}),
     wf:update(content, Content);
 
+event({add_note, NoteType}) ->
+    Redirect=["/nnote/add_edit?",
+        wf:to_qs([{id,"new"}, {note_type,NoteType}])],
+        wf:redirect(Redirect);
+
 %% Info Events
 event({info, Function}) ->
     wf:flash(info(Function));
@@ -117,8 +122,15 @@ content(#{}) ->
 content_headline() ->
     [#h2{class=content, text="My Notes"}].
 
-tag_search(_NoteType) -> [].
-date_search(_NoteType) -> [].
+tag_search(NoteType) -> 
+    UserID = n_utils:get_user_id(),
+    SearchList = wf:q(search_words),
+    nnote_api:search(UserID, NoteType, SearchList).
+
+date_search(NoteType) -> 
+    UserID = n_utils:get_user_id(),
+    Date = wf:q(search_date),
+    nnote_api:get_records_by_date(UserID, NoteType, Date).
 
 %%********************************************************************
 %% Content
@@ -147,7 +159,7 @@ search_results(Records) ->
    %% io:format("Display results").
 
 add_note_button(NoteType) ->
-    ButtonText = ["Enter new ",NoteType," note"],
+    ButtonText = ["Enter ",NoteType," note"],
     #button{text=ButtonText, postback={add_note, NoteType}}.
 
 search_by_tag() ->
