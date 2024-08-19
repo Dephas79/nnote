@@ -10,7 +10,7 @@
 -define(TITLE, "Welcome to nnnote!").
 -define(TOP, "nnote").
 
-url_vars() -> [id, note_type, task].
+url_vars() -> [id, note_type, {task, atom}].
 
 %%***********************************************************
 %% Page state functions
@@ -37,6 +37,88 @@ tips()->
                under the MIT LIscence."}
 ].
 
+%%*************************************************************
+%% Content executives
+
+content(#{note_type:=undefined, task:=undefined}) ->
+    [ content_headline(),
+    #p{text="Select note type."}
+    %%search_by_tag()
+];
+
+content(#{note_type:=NoteType, task:=Task}) ->
+%     
+    Records = records_from_task(NoteType, Task),
+    display_forms(NoteType, Records).
+
+records_from_task(_, undefined) -> undefined;
+records_from_task(NoteType, search_by_tag) -> tag_search(NoteType);
+records_from_task(NoteType, search_by_date) -> date_search(NoteType).
+
+% content(#{}) ->
+%     [content_headline(),
+%    #p{text="Select note type."}
+%     ].
+
+tag_search(NoteType) -> 
+    UserID = n_utils:get_user_id(),
+    SearchList = wf:q(search_words),
+    nnote_api:search(UserID, NoteType, SearchList).
+
+date_search(NoteType) -> 
+    UserID = n_utils:get_user_id(),
+    Date = wf:q(search_date),
+    nnote_api:get_records_by_date(UserID, NoteType, Date).
+
+search_results(undefined) -> [];
+    %%io:format("Show nothing");
+search_results([]) -> 
+    [#hr{},
+    #h2{text="Search Results"},
+    #p{text="No notes found"}    
+];
+    %%io:format("No notes found");
+search_results(Records) ->
+    [#hr{},
+    #h2{text="Search results"},
+    [n_utils:draw_link(Record) || Record <- Records]
+].
+ 
+%%********************************************************************
+%% Content
+%%********************************************************************
+display_forms(NoteType, Records) ->
+    [content_headline(),
+    add_note_button(NoteType),
+    search_by_tag(NoteType),
+    search_by_date(NoteType),
+    #panel{id=search_results, body=search_results(Records)}
+].
+
+content_headline() ->
+    [#h2{class=content, text="My Notes"}].
+
+add_note_button(NoteType) ->
+    ButtonText = ["Enter ",NoteType," note"],
+    #button{text=ButtonText, postback={add_note, NoteType}}.
+
+search_by_tag(NoteType) ->
+   [ #br{},
+   #label{text="enter search words"},
+   #br{},
+   #textbox{id=search_words},
+   #button{text="Search", postback={search_by_tag, NoteType}},
+   #button{text="Info", postback={info, search_by_tag}}
+   ].
+search_by_date(NoteType) ->
+    [ #br{},
+      #label{text="Enter date"},
+      #br{},
+      n_dates:datepicker(search_date, ""),
+      #button{text="Search", postback={search_by_date, NoteType}},
+      #button{text = "Info", postback = {info, search_by_date}}
+].
+
 %% Info
 info(search_by_tag) ->
     [ #h2{body=["<i>Search Words</i>"]},
@@ -61,19 +143,15 @@ side_menu("NOTE TYPE") ->
     {"web",          {select,"web"}}
 ].
 
-event(search_by_tag) ->
-    NoteType = wf:q(note_type),
-    Content = content(#{note_type=>NoteType, task=>search_by_tag}),
-    wf:update(content, Content);
+event({SearchTask, NoteType}) when SearchTask==search_by_tag;
+                                  SearchTask==search_by_date ->
 
-event(search_by_date) ->
-    NoteType = wf:q(note_type),
-    Content = content(#{note_type=>NoteType, task=>search_by_date}),
-    wf:update(content, Content);
+    Records = records_from_task(NoteType,SearchTask),
+    wf:update(search_results, search_results(Records));
 
 event({add_note, NoteType}) ->
     Redirect=["/nnote/add_edit?",
-        wf:to_qs([{id,"new"}, {note_type,NoteType}])],
+        wf:to_qs([{id,"new"}, {note_type, NoteType}])],
         wf:redirect(Redirect);
 
 %% Info Events
@@ -95,87 +173,5 @@ sidebar(#{note_type:=NoteType}) ->
 show_side_menu(Menu, Selected) ->
     [ #h4 {class=select, text=Menu},
         [ n_menus:show_menu_item(MenuItem, Selected) || MenuItem <- side_menu(Menu)]
-].
-
-%%*************************************************************
-%% Content executives
-
-content(#{note_type:=undefined, task:=undefined}) ->
-    [ content_headline(),
-    #p{text="Select note type."}
-    %%search_by_tag()
-];
-
-content(#{note_type:=NoteType, task:=Task}) ->
-     Records = case Task of 
-         undefined -> undefined;
-         search_by_tag -> tag_search(NoteType);
-         search_by_date -> date_search(NoteType)
- end,
- display_forms(NoteType, Records);
-
-content(#{}) ->
-    [content_headline(),
-   #p{text="Select note type."}
-    ].
-
-content_headline() ->
-    [#h2{class=content, text="My Notes"}].
-
-tag_search(NoteType) -> 
-    UserID = n_utils:get_user_id(),
-    SearchList = wf:q(search_words),
-    nnote_api:search(UserID, NoteType, SearchList).
-
-date_search(NoteType) -> 
-    UserID = n_utils:get_user_id(),
-    Date = wf:q(search_date),
-    nnote_api:get_records_by_date(UserID, NoteType, Date).
-
-%%********************************************************************
-%% Content
-%%********************************************************************
-display_forms(NoteType, Records) ->
-    [content_headline(),
-    add_note_button(NoteType),
-    search_by_tag(),
-    search_by_date(),
-    search_results(Records)
-].
-
-search_results(undefined) -> [];
-    %%io:format("Show nothing");
-search_results([]) -> 
-    [#hr{},
-    #h2{text="Search Results"},
-    #p{text="No notes found"}    
-];
-    %%io:format("No notes found");
-search_results(Records) ->
-    [#hr{},
-    #h2{text="Search results"},
-    [n_utils:draw_link(Record) || Record <- Records]
-].
-   %% io:format("Display results").
-
-add_note_button(NoteType) ->
-    ButtonText = ["Enter ",NoteType," note"],
-    #button{text=ButtonText, postback={add_note, NoteType}}.
-
-search_by_tag() ->
-   [ #br{},
-   #label{text="enter search words"},
-   #br{},
-   #textbox{id=search_words},
-   #button{text="Search", postback=search_by_tag},
-   #button{text="Info", postback={info, search_by_tag}}
-   ].
-search_by_date() ->
-    [ #br{},
-      #label{text="Enter date"},
-      #br{},
-      n_dates:datepicker(search_date, ""),
-      #button{text="Search", postback=search_by_date},
-      #button{text = "Info", postback = {info, search_by_date}}
 ].
 

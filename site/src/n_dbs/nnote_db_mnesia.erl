@@ -96,6 +96,7 @@ get_records_by_date(UserID, Type, Date) ->
     {atomic, Results} = mnesia:transaction(Query),
     Results.
 
+search(_, _, undefined) -> [];
 search(UserID, NoteType, SearchList) ->
     Query = fun() ->
         qlc:eval( qlc:q(
