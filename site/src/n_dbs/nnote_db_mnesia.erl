@@ -12,7 +12,7 @@
     note
 }).
 -export([ init_table/0, put_record/1, get_all_values/1, get_all/0, get_record/1,
-    delete/1, populate_record/1, get_records_by_type/2, get_records_by_date/3,
+    delete/1, map_to_record/1, record_to_map/1, get_records_by_type/2, get_records_by_date/3,
     search/3, id/1, user_id/1, date/1, type/1, event/1, source/1, topic/1, question/1,
     tags/1, note/1, id/2, user_id/2, date/2, type/2, event/2, source/2, topic/2,
     question/2, tags/2, note/2       
@@ -26,8 +26,10 @@ init_table() ->
               {attributes, record_info(fields, ?TABLE)}
             ]).
 put_record(Record) ->
+    FormattedDate = qdate:to_string("Y-m-d", date(Record)),
+    Record2 = date(Record, FormattedDate),
     Insert = fun() ->
-        mnesia:write(Record)
+        mnesia:write(Record2)
         end,
     {atomic, Results} = mnesia:transaction(Insert),
     Results.
@@ -60,19 +62,11 @@ delete(Key) ->
     {atomic, Results} = mnesia:transaction(Insert),
     Results.
 
-populate_record([User_id, Type, Date, Event, Source, Topic, Question, Tags, Note]) ->
-    Date2 = qdate:to_string("Y-m-d", Date),
-    #nnote{ 
-    user_id = User_id,
-    type = Type,
-    date = Date2,
-    event = Event,
-    source = Source,
-    topic = Topic,
-    question = Question,
-    tags = Tags,
-    note = Note
-}.
+map_to_record(Map) ->
+    n_utils:map_to_record(#nnote{}, record_info(fields, nnote), Map).
+
+record_to_map(Record) ->
+    n_utils:record_to_map(Record, record_info(fields, nnote)).
 
 get_records_by_type(UserID, Type) ->
     Query = fun() ->

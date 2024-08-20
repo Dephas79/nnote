@@ -23,6 +23,7 @@ start_link() ->
 
 init([]) ->
     n_mnesia:one_time(),
+    erlias:build(nnote_db_mnesia, nnote_api),
     application:load(nitrogen_core),
     application:ensure_all_started(nitro_cache),
     application:ensure_all_started(crypto),
@@ -31,3 +32,4 @@ init([]) ->
     application:ensure_all_started(simple_bridge),
 
     {ok, { {one_for_one, 5, 10}, []} }.
+

@@ -75,9 +75,11 @@ show_side_menu(Menu, Selected) ->
 
 %% Save Function
 save(ID,UserID, NoteType) ->
-    Params = wf:mq([date, event, source, topic, question, tags, note]),
-    Params2 = [UserID, NoteType | Params],
-    Record = nnote_api:populate_record(Params2),
+     Map = wf:q_map([date, event, source, topic, tags, note]),
+    Map2 = Map#{user_id=>UserID,
+                type=>NoteType},
+    Record = nnote_api:map_to_record(Map2),
+    
     Record2 = case ID of 
         "new" -> Record;
         _ -> nnote_api:id(Record, ID)
@@ -104,20 +106,43 @@ content_headline(ID, NoteType) ->
     NoteType2 = wf:to_list(NoteType),
     #h2{class=content, text=[Action, " ", string:titlecase(NoteType2), " Note"]}.
 
+%% This bit below where we're using a Map to pass arguments to form/1 works,
+%% but even it has some fragility that might be worth exploring eliminating.
+%% The simplest solution would be to make a new nnote_db_mnesia:new() function
+%% which simply returns an initialized #nnote{} record. Then you could just use
+%% the setters and getters to interact with the record.  This is the safest
+%% approach, and would save a few lines of code, but this is manageable.
+
 %%*************************************************************
 %%  add/edit form
 add_edit_form("new", NoteType) ->
     UserID = n_utils:get_user_id(),
     Date = qdate:to_string("m/d/Y"),
-    form("new", UserID, NoteType, Date, "", "", "", "", "", "");
+    Map = #{id=>"new",
+            user_id=>UserID,
+            type=>NoteType,
+            date=>Date},
+    form(Map);
 
-add_edit_form(ID, NoteType) ->
+add_edit_form(ID, _NoteType) ->   
     Record = nnote_api:get_record(ID),
-    [ID, UserID, NoteType, Date, Event, Source, Topic, Question, Tags, Note] =
-        nnote_api:get_all_values(Record),
-    form(ID, UserID, NoteType, Date, Event, Source, Topic, Question, Tags, Note)
-    .
-form(ID, UserID, NoteType, Date, Event, Source, Topic, Question, Tags, Note)  ->
+     Map = nnote_api:record_to_map(Record),
+    form(Map). 
+
+%% We can only match on the 4 fields we know for sure will be there.
+%% The rest of the fields, we'll get with maps:get/3 (the 3rd argument is
+%% the default value if the field isn't present in the Map).
+form(Map = #{id:=ID,
+             user_id:=UserID,
+             type:=NoteType,
+             date:=Date}) ->
+    Event = maps:get(event, Map, ""),
+    Source = maps:get(source, Map, ""),
+    Question = maps:get(question, Map, ""),
+    Tags = maps:get(tags, Map, ""),
+    Topic = maps:get(topic, Map, ""),
+    Note = maps:get(note, Map, ""),
+
 %% Installing the functions
     ShowEvent = show_event(NoteType),
     ShowSource = show_source(NoteType),
