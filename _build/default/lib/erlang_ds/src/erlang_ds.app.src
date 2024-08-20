@@ -1,0 +1,9 @@
+{application,erlang_ds,
+             [{description,"Work with common erlang data structures (map, dict, proplist, etc)"},
+              {vsn,"0.3.0"},
+              {registered,[]},
+              {applications,[kernel,stdlib]},
+              {env,[]},
+              {licenses,["MIT"]},
+              {modules,[erlang_ds]},
+              {links,[{"Github","http://github.com/choptastic/erlang_ds"}]}]}.

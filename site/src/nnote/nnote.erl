@@ -133,15 +133,6 @@ info(search_by_date) ->
 %%*************************************************************
 %% side menus
 %%*************************************************************
-side_menu("NOTE TYPE") ->
-    [ { "conference",{select,"conference"}},
-    {"idea",         {select,"idea"}},
-    {"interview",    {select,"interview"}},
-    {"lab",          {select,"lab"}},
-    {"lecture",      {select,"lecture"}},
-    {"research",    {select,"research"}},
-    {"web",          {select,"web"}}
-].
 
 event({SearchTask, NoteType}) when SearchTask==search_by_tag;
                                   SearchTask==search_by_date ->
@@ -153,6 +144,14 @@ event({add_note, NoteType}) ->
     Redirect=["/nnote/add_edit?",
         wf:to_qs([{id,"new"}, {note_type, NoteType}])],
         wf:redirect(Redirect);
+
+event({delete, ID, Wrapperid}) ->
+    wf:wire(#confirm{text = "Really delete this note?",
+                    postback = {confirm_delete, ID, Wrapperid}});
+
+event({confirm_delete, ID, Wrapperid}) ->
+    wf:remove(Wrapperid),
+    nnote_api:delete(ID);
 
 %% Info Events
 event({info, Function}) ->
@@ -172,6 +171,6 @@ sidebar(#{note_type:=NoteType}) ->
 
 show_side_menu(Menu, Selected) ->
     [ #h4 {class=select, text=Menu},
-        [ n_menus:show_menu_item(MenuItem, Selected) || MenuItem <- side_menu(Menu)]
+        [ n_menus:show_menu_item(MenuItem, Selected) || MenuItem <- n_menus:note_type_side_menu()]
 ].
 

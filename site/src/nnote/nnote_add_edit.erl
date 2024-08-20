@@ -47,18 +47,6 @@ info(search_by_date) ->
 ].
 
 %%*************************************************************
-%% side menus
-%%*************************************************************
-side_menu("NOTE TYPE") ->
-    [ { "conference",{select,"conference"}},
-    {"idea",         {select,"idea"}},
-    {"interview",    {select,"interview"}},
-    {"lab",          {select,"lab"}},
-    {"lecture",      {select,"lecture"}},
-    {"research",    {select,"research"}},
-    {"web",          {select,"web"}}
-].
-%%*************************************************************
 %% Sidebar events 
 event({select, NoteType}) ->
     Redirect = [wf:path(), "?",
@@ -82,7 +70,7 @@ sidebar(#{note_type:=NoteType}) ->
 
 show_side_menu(Menu, Selected) ->
     [ #h4 {class=select, text=Menu},
-        [ n_menus:show_menu_item(MenuItem, Selected) || MenuItem <- side_menu(Menu)]
+        [ n_menus:show_menu_item(MenuItem, Selected) || MenuItem <- n_menus:note_type_side_menu()]
 ].
 
 %% Save Function
@@ -137,8 +125,8 @@ form(ID, UserID, NoteType, Date, Event, Source, Topic, Question, Tags, Note)  ->
 %% Define the validators
     wf:defer(save_note, topic, #validate{validators = [#is_required{text="Topic required"}]}),
     wf:defer(save_note, note, #validate{validators = [#is_required{text="Note required"}]}),
-    wf:defer(save_note, event, #validate{validators = [#is_required{text="Event required"}]}),
-    wf:defer(save_note, source, #validate{validators = [#is_required{text="SOurce required"}]}),
+    ?WF_IF(ShowEvent, wf:defer(save_note, event, #validate{validators = [#is_required{text="Event required"}]})),
+    ?WF_IF(ShowSource, wf:defer(save_note, source, #validate{validators = [#is_required{text="SOurce required"}]})),
 
         [   #label{text="Date"}, #br{},
             n_dates:datepicker(date, Date), #br{},
