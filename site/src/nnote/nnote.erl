@@ -10,7 +10,7 @@
 -define(TITLE, "Welcome to nnnote!").
 -define(TOP, "nnote").
 
-url_vars() -> [id, note_type, {task, atom}].
+url_vars() -> [id, {note_type, atom}, {task, atom}].
 
 %%***********************************************************
 %% Page state functions

@@ -29,7 +29,7 @@ show_main_menu_item(MenuItem, Selected) ->
     #link {class=Class, text=Text, postback=Postback, delegate=?MODULE}.
 
 if_selected(Text, Selected) ->
-    case text == Selected of 
+    case Text == Selected of 
         true -> "mmselected";
         false -> "mm"
     end.
@@ -51,20 +51,19 @@ event(URL) -> wf:redirect(URL).
 %% Side Bar menus
 %%**************************************************************
 note_type_side_menu() ->
-[{"conference",{select,"conference"}},
-{"idea", {select,"idea"}},
-{"interview", {select,"interview"}},
-{"lab", {select,"lab"}},
-{"lecture", {select,"lecture"}},
-{"research", {select,"research"}},
-{"web", {select,"web"}}
-].
-
+     [{"conference",{select,conference}},
+     {"idea", {select,idea}},
+     {"interview", {select,interview}},
+     {"lab", {select,lab}},
+     {"lecture", {select,lecture}},
+     {"research", {select,research}},
+     {"web", {select,web}}
+    ].
 show_menu_item(MenuItem, Selected) ->
     {Text, Postback} = MenuItem,
     [#radio{name=side_menu_item,
             text=Text,
-            checked= (Text==Selected),
+            checked= (Text==wf:to_list(Selected)),
             value=Text,
             postback=Postback
 },
