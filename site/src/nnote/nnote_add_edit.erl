@@ -174,7 +174,7 @@ form(Map = #{id:=ID,
     ].
 %%************************************************************************
 %% Content Helpers
-button_text("new") -> "Enter new note";
+button_text("new") -> "Save";
 button_text(_ID) -> "Submit changes".
 
 %% Metadata Funtions
