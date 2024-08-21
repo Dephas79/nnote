@@ -29740,3 +29740,13 @@ Checking localtime_dst
 /home/beta/FRAMES/nnote/site/src/nnote/nnote_add_edit.erl
 /home/beta/FRAMES/nnote/site/src/nnote/nnote_add_edit.erl
 /home/beta/FRAMES/nnote/site/src/nnote/nnote_add_edit.erl
+/home/beta/FRAMES/nnote/site/src/index.erl
+/home/beta/FRAMES/nnote/site/src/n_apps.erl
+/home/beta/FRAMES/nnote/site/src/n_dbs/nnote_db_mnesia.erl
+/home/beta/FRAMES/nnote/site/src/n_libs/n_common.erl
+/home/beta/FRAMES/nnote/site/src/n_libs/n_menus.erl
+/home/beta/FRAMES/nnote/site/src/n_libs/n_utils.erl
+/home/beta/FRAMES/nnote/site/src/nnote/nnote.erl
+/home/beta/FRAMES/nnote/site/src/nnote/nnote_add_edit.erl
+Checking register
+/home/beta/FRAMES/nnote/site/src/n_access/register.erl
