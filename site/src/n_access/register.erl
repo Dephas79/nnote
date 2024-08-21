@@ -1,5 +1,5 @@
 %% -*- mode: nitrogen -*-
--module (index).
+-module (register).
 -compile(export_all).
 -include_lib("nitrogen_core/include/wf.hrl").
 -behaviour(n_apps).
@@ -7,10 +7,10 @@
 %% Macros [template and title]
 %%*************************************************************
 -define(MMSELECTED, "home").
--define(TITLE, "Welcome!").
+-define(TITLE, "REgistration Page").
 -define(TOP, "Build it with Nitrogen").
 
-url_vars() -> [id, note_type, task].
+url_vars() -> [].
 access() -> public.
 
 %%***********************************************************
@@ -45,24 +45,30 @@ tips()->
 %%*************************************************************
 
 content(#{}) ->
-    greeting().
+    new_account_form().
 
-greeting() ->
-    [#h2{text=["Welcome to ", n_utils:get_nickname(), "'s",
-                " Nitrogen Application!"]},
-     #p{body="Our moto: <em>\"Build it Fast with Nitrogen\"</em>"}
-    ].
+new_account_form() ->
+    wf:defer(save, username, #validate{validators = [#is_required{text="Username Required"}]}),
+    wf:defer(save, email, #validate{validators = [#is_required{text="Email Required"}]}),
+    wf:defer(save, password, #validate{validators = [
+                #is_required{text="Password Required"}]}),
+    wf:defer(save, password2, #validate{validators = [
+                #confirm_same{text="Passwords do not match", confirm_id=password}]}),
 
-%%*************************************************************
-%% side menus
-%%*************************************************************
-side_menu("WEB SITE") ->
-    [ {"nitrogen", {goto,
-            "http://nitrogenproject.com/"}},
-      {"erlang", {goto,
-            "http://erlang.org/doc/apps/stdlib/"}},
-      {"hacker news", {goto,
-            "https://news.ycombinator.com/"}}
+    [   #h1{text="Create Account"},
+        #label{text = "Username"}, #br{},
+        #textbox{id=username,placeholder = "Your Username"}, #br{},
+
+        #label{text = "Email"},#br{},
+        #textbox{id=email, placeholder = "example@gmail.com"},
+
+        #label{text = "Password"},#br{},
+        #password{id=password}, #br{},
+        #label{text = "Confirm Password"}, #br{},
+        #password{id=password2},
+
+        #br{},
+        #button{id=svae, text="Save Account", postback=save}
 ].
 
 %%*************************************************************
@@ -70,14 +76,7 @@ side_menu("WEB SITE") ->
 %%*************************************************************
 evet({goto, Link}) ->
     wf:redirect(Link).
-
 sidebar(#{}) ->
-    [ #h3 {text="SELECT"},
-      show_side_menu("WEB SITE", unselected)
-].
-
-show_side_menu(Menu, Selected) ->
-    [ #h4 {class=select, text=Menu},
-        [ n_menus:show_menu_item(MenuItem, Selected) || MenuItem <- side_menu(Menu)]
+    [ 
 ].
 
