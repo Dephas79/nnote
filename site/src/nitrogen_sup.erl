@@ -30,6 +30,7 @@ init([]) ->
     application:ensure_all_started(nprocreg),
     application:ensure_all_started(qdate),
     application:ensure_all_started(simple_bridge),
+    application:ensure_all_started(erlpass),
 
     {ok, { {one_for_one, 5, 10}, []} }.
 
