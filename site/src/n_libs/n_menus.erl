@@ -9,7 +9,8 @@ main_menu() ->
     [{"home", "/"},
      {"nindex", "/nindex"},
      {"nnote" , "/nnote"},
-     {"Tips & Info", tips}
+     {"Tips & Info", tips},
+     {"Account", account}
     ].
 
 %% ***************************************************
@@ -40,9 +41,11 @@ event(tips) ->
     Mod = wf:page_module(),
     Tips = Mod:tips(),
     wf:flash(Tips);
-event(logout) ->
-    wf:logout(),
-    wf:redirect("/");
+event(account) ->
+    wf:redirect_to_login("/login");
+% event(logout) ->
+%     wf:logout(),
+%     wf:redirect("/");
 event(URL) ->
     wf:redirect(URL).
 

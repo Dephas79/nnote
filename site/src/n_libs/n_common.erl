@@ -8,7 +8,7 @@ template() ->
     Access =  get_access(),
     case can_access(Access) of
         true -> #template{file=?TEMPLATE};
-        false -> wf:redirect_to_login("/register")
+        false -> wf:redirect_to_login("/login")
     end.
 
 get_access() -> 
@@ -18,7 +18,7 @@ get_access() ->
     end.
 
 can_access(public) -> true;
-can_access(private) -> wf:user()=/=undefined.
+can_access(private) -> n_utils:get_user_id()=/=undefined.
     
 main_menu() ->
     #panel{id=main_menu, body=?PAGE:main_menu()}.
