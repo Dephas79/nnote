@@ -104,9 +104,9 @@ get_records_by_username(Username) ->
 %% Login Details
 new_account(Username, Email, Password) ->
     PWHash = erlpass:hash(Password),
-    Record = #n_account{username = Username,
-                        email = Email,
-                        pwhash = PWHash},
+    Record = #n_account{username=Username,
+                        email=Email,
+                        pwhash=PWHash},
     put_record(Record),
     Record.
 

@@ -1,5 +1,5 @@
 %% -*- mode: nitrogen -*-
--module (register).
+-module(register).
 -compile(export_all).
 -include_lib("nitrogen_core/include/wf.hrl").
 -behaviour(n_apps).
@@ -7,7 +7,7 @@
 %% Macros [template and title]
 %%*************************************************************
 -define(MMSELECTED, "home").
--define(TITLE, "REgistration Page").
+-define(TITLE, "Registration Page").
 -define(TOP, "Build it with Nitrogen").
 
 url_vars() -> [].
@@ -68,14 +68,20 @@ new_account_form() ->
         #password{id=password2},
 
         #br{},
-        #button{id=svae, text="Save Account", postback=save}
+        #button{id=save, text="Save Account", postback=save}
 ].
 
 %%*************************************************************
 %% Sidebar events
 %%*************************************************************
-evet({goto, Link}) ->
-    wf:redirect(Link).
+event(save) ->
+    [Username, Email, Password] = wf:mq([username, email, password]),
+    Record = account_api:new_account(Username, Email, Password),
+    UserID = account_api:id(Record),
+    wf:user(UserID),
+    wf:session(username, Username),
+    wf:redirect_from_login("/").
+
 sidebar(#{}) ->
     [ 
 ].
