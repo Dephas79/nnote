@@ -18,12 +18,13 @@ one_time() ->
     init_tables().
 
 schema() ->
+    [rpc:call(Node, mnesia, stop, [])|| Node <- ?NODES],
     case mnesia:create_schema(?NODES) of
         ok  -> ok;
         {error, {_, {already_exists, _}}} -> ok;
         Other  -> exit(Other)
     end,
-    mnesia:start().
+    [rpc:call(Node, mnesia, start, [])|| Node <- ?NODES].
 
 start() ->  mnesia:start().
 info() ->   mnesia:info().
