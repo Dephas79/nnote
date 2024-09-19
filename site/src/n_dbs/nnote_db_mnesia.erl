@@ -48,10 +48,10 @@
 -include_lib("stdlib/include/qlc.hrl").
 
 -define(TABLE, nnote).
-
+-define(NODES, [node()|nodes()]).
 init_table() ->
     mnesia:create_table(?TABLE,
-    [ {disc_copies, [node()] },
+    [ {disc_copies, ?NODES },
       {attributes,
        record_info(fields, ?TABLE)}
     ]).

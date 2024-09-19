@@ -5,7 +5,7 @@
             info/0,
             stop/0
 ]).
-
+-define(NODES, [node()|nodes()]).
 % start() ->
 %     one_time(),
 %     mnesia:start().
@@ -18,7 +18,7 @@ one_time() ->
     init_tables().
 
 schema() ->
-    case mnesia:create_schema([node()]) of
+    case mnesia:create_schema(?NODES) of
         ok  -> ok;
         {error, {_, {already_exists, _}}} -> ok;
         Other  -> exit(Other)
