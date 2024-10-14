@@ -11,7 +11,10 @@
 %     mnesia:start().
 init_tables() ->
     nnote_db_mnesia:init_table(),
-    account_db_mnesia:init_table().
+    account_db_riak:init_table().
+
+%% changed mnesia to riak
+    % account_db_mnesia:init_table().
 
 one_time() ->
     schema(),

@@ -4,6 +4,26 @@
 -define(PAGE, (wf:page_module())).
 -define(TEMPLATE, "./site/templates/n_apps.html").
 
+open_connection() ->
+	{ok,Pid} = riakc_pb_socket:start_link("127.0.0.1", 8087),
+    {ok,Pid}.
+
+close_connection(Pid) ->
+	riakc_pb_socket:stop(Pid).
+
+%%-------------------------------------------------------------------------------------------------------------------------------------
+%% Setting secondary Indexes
+set_secondary_indexes(MD,[]) -> MD;
+set_secondary_indexes(MD,[{Index_name,Index_value}|Others]) ->	
+    Index_name_str = 
+        case is_atom(Index_name) of
+            true -> atom_to_list(Index_name); 
+            false -> Index_name 
+        end,
+    MD1 = riakc_obj:set_secondary_index(MD,[{{binary_index,Index_name_str},[term_to_binary(Index_value)]}]),
+    set_secondary_indexes(MD1,Others).
+%%----------------------------------------------------------------------------------------------------------------------------------------
+
 template() ->
     Access =  get_access(),
     case can_access(Access) of

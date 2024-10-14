@@ -176,7 +176,7 @@ save(ID, UserID, NoteType) ->
         "new" -> Record;
         _ -> nnote_api:id(Record, ID)
     end,
-    nnote_api:put_record(Record2),
+    nnote_api:put_record(Record2,[{user_id,UserID},{date,nnote_db_riak:date(Record2)},{type,NoteType}]),
     Redirect = ["/nnote", "?",
                 wf:to_qs([{note_type, NoteType} ]) ],
     wf:redirect(Redirect).
@@ -195,6 +195,7 @@ event({save_note, ID, UserID, NoteType}) ->
     io:format("Save~n"),
     wf:wire(#confirm{text="Save?",
                      postback={confirm_save, ID, UserID, NoteType}});
+
 event({confirm_save, ID, UserID, NoteType}) ->
     save(ID, UserID, NoteType);
 event(cancel) ->

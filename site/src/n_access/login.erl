@@ -113,6 +113,7 @@ event(save) ->
 
 event(signin) ->
     [Username, Password] = wf:mq([username, password]),
+    
     case account_api:attempt_login(Username, Password) of
         undefined ->
             wf:flash("Invalid Username or Password. Try Again!");
