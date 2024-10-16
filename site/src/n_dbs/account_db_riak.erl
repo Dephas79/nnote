@@ -10,6 +10,9 @@
 -export([ get_records_by_username/1,
           put_record/1,
           get_all_values/1,
+          update_read/1,
+          update_write/2,
+          update_write/3,
           get_all/0,
           get_record/1,
           delete/1,
@@ -47,6 +50,24 @@ put_record(Record, ListOfIndexes) ->
     Obj2 = riakc_obj:update_metadata(Obj, MD),
     riakc_pb_socket:put(Pid, Obj2),
     n_common:close_connection(Pid).
+
+update_read(Key) ->
+    %% Put a write lock immediately as you read to update a record
+        %% Note: The record is not stored in mnesia, but lets mnesia
+        %% lock out updating processes from reading a record from riak
+        %% until the current process has finished updating the record
+        %% and removed the write lock on the record.
+        %% Note - the order of calls matters
+        mnesia:read(n_account, Key, write),
+        get_record(Key).
+
+update_write(Key, Record) ->
+    update_write(Key, Record, []).
+
+update_write(Key, Record, ListOfIndexes) ->
+    mnesia:write(n_account, Record, write),
+    put_record(Record, ListOfIndexes),
+    mnesia:delete(n_account, Key, write).
 
 get_all_values(Record) ->
     [_|Tail] = tuple_to_list(Record),
@@ -126,4 +147,3 @@ username(Record, Username) -> Record#n_account{username = Username}.
 email(Record, Email) -> Record#n_account{email = Email}.
 date(Record, Date) -> Record#n_account{date = Date}.
 pwhash(Record, PWHash) -> Record#n_account{pwhash = PWHash}.
-
