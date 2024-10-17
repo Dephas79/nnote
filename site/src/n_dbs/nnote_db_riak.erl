@@ -64,7 +64,8 @@ put_record(Record, ListOfIndexes) ->
     MD = n_common:set_secondary_indexes(ObjMetaData, ListOfIndexes),
     Obj2 = riakc_obj:update_metadata(Obj, MD),
     riakc_pb_socket:put(Pid, Obj2),
-    n_common:close_connection(Pid).
+    n_common:close_connection(Pid),
+    Record2.
 
 get_all_values(Record) ->
     [_|Tail] = tuple_to_list(Record),
@@ -101,7 +102,7 @@ delete(Key) ->
   n_common:close_connection(Pid).
 
 map_to_record(Map) ->
-    n_utils:map_to_record(#nnote{}, record_info(fields, nnote), Map).
+    n_utils:map_to_record(#nnote{}, record_info(fields, nnote),Map).
 
 record_to_map(Record) ->
     n_utils:record_to_map(Record, record_info(fields, nnote)).
