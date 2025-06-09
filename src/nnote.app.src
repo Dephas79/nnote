@@ -1,0 +1,9 @@
+{application, nnote,
+ [
+  {description, "My Nitrogen Web Project"},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [kernel, stdlib, nitrogen_core]},
+  {mod, { nnote_app, []}},
+  {env, []}
+ ]}.
