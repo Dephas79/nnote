@@ -1,11 +1,10 @@
 %% -*- mode: nitrogen -*-
 %% vim: ts=4 sw=4 et
 -module(nnote_sup).
+
 -behaviour(supervisor).
--export([
-    start_link/0,
-    init/1
-]).
+
+-export([start_link/0, init/1]).
 
 %% Helper macro for declaring children of supervisor
 -define(CHILD(I, Type), {I, {I, start_link, []}, permanent, 5000, Type, [I]}).
@@ -22,9 +21,8 @@ start_link() ->
 %% ===================================================================
 
 init([]) ->
-
-    erlias:build(nnote_db_riak, nnote_api),
-    erlias:build(account_db_riak, account_api), 
+    % erlias:build(nnote_db_riak, nnote_api),
+    % erlias:build(account_db_riak, account_api),
     application:ensure_all_started(erlpass),
     application:ensure_all_started(nitrogen_core),
     application:ensure_all_started(nitro_cache),
@@ -32,4 +30,4 @@ init([]) ->
     application:ensure_all_started(nprocreg),
     application:ensure_all_started(simple_bridge),
 
-    {ok, { {one_for_one, 5, 10}, []} }.
+    {ok, {{one_for_one, 5, 10}, []}}.
