@@ -4,10 +4,19 @@ This is an Erlang web application using the [Nitrogen Web
 Framework](https://nitrogenproject.com).
 
 # Building
+Clone the repo
 
+!! Remember to set your local erlang to 25.3.2.21 or any below but not 24 !!
 You can rebuild the project by typing:
+```
+   $ rebar3 compile
+```
+Running locally**
 
-   make
+run riak on the machine and start the erlang riak client \
+then start the nitrigen console
+
+For server, will need a reverse proxy and load balancer
 
 If this fails, it likely means that its a slim release and Erlang is not
 installed on this machine. Please [install
@@ -22,17 +31,7 @@ You can start the application with:
 which will start it in daemon mode.  You can attach to this started daemon
 with:
 
-  make attach
-
-If you'd rather have an Erlang console right away, rather than starting a
-daemon, type:
-
-  make run_release
-
-You can hot-upgrade a running release with:
-
-  make upgrade_running
-
+ 
 If a release fails to build or upgrade, you can revert the current version with
 
   make revert_version
